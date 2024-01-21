@@ -2,6 +2,7 @@ package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepositoryV2;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import static hello.jdbc.connection.ConnectionConst.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Slf4j
 class MemberServiceV2Test {
 
     private MemberRepositoryV2 memberRepository;
@@ -42,8 +44,10 @@ class MemberServiceV2Test {
         memberRepository.save(memberA);
         memberRepository.save(memberB);
         //when
+        log.info("START TX");
         memberService.accountTransfer(memberA.getMemberId(),
                 memberB.getMemberId(), 2000);
+        log.info("END TX");
         //then
         Member findMemberA = memberRepository.findById(memberA.getMemberId());
         Member findMemberB = memberRepository.findById(memberB.getMemberId());
